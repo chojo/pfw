@@ -26,6 +26,11 @@ public class Game extends Thread{
         public String position() {
             return "pos "+ playerConnection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
         }
+
+        public boolean borderCollision() {
+            // return true if head reaches border canvas
+        }
+
     }
 
     private final Map<String, Player> players = new HashMap<>();

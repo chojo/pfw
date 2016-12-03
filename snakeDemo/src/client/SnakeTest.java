@@ -38,6 +38,14 @@ public class SnakeTest extends PApplet {
             ellipse(v.x, v.y, 20,20);
         }
     }
+
+    public int getScreenX() {
+        return SCREEN_X;
+    }
+
+    public int getScreenY() {
+        return SCREEN_Y;
+    }
     
     //FOOD
     public void setFood() { 
