@@ -1,0 +1,3 @@
+Klasse "Food" in Package "shared"
+
+Klasse "SnakeTest": Food von Kristina hinzugefügt, fraglich ob es hier bleibt, muss eigentlich in Klasse "Game"
