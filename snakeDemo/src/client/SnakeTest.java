@@ -19,6 +19,9 @@ public class SnakeTest extends PApplet {
     static PVector direction = new PVector(1,0);
     static Rotation rotation = Rotation.NONE;
     static Snake snake = new Snake(100,100);
+
+    String playerName = "AnonymousSnake";
+
     private Food food = null; //FOOD
 
     public static void main(String[] args)  {
@@ -115,5 +118,9 @@ public class SnakeTest extends PApplet {
     @Override
     public void keyReleased() {
         rotation = Rotation.NONE;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }
