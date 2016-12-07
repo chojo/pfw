@@ -28,7 +28,7 @@ public class Game extends Thread{
         }
 
         public boolean borderCollision() {
-            // return true if head reaches border canvas
+            // return true if snake head reaches border canvas
         }
 
     }
