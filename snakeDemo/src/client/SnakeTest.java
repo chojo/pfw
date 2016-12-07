@@ -1,5 +1,8 @@
 package client;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 import processing.event.KeyEvent;
@@ -14,12 +17,15 @@ public class SnakeTest extends PApplet {
 
     public static final int SCREEN_X = 1024;
     public static final int SCREEN_Y = 768;
-
+    public static final int MAX_FOOD = 30;
+    public static final int GROWING_FACTOR = 2;
+    
+    List<Food> foodlist = new LinkedList<>();
 
     static PVector direction = new PVector(1,0);
     static Rotation rotation = Rotation.NONE;
     static Snake snake = new Snake(100,100);
-    private Food food = null; //FOOD
+
 
     public static void main(String[] args)  {
         PApplet.main("client.SnakeTest");
@@ -41,14 +47,28 @@ public class SnakeTest extends PApplet {
     
     //FOOD
     public void setFood() { 
-        this.food = new Food(SCREEN_X, SCREEN_Y);
+        Food newFood = new Food(SCREEN_X, SCREEN_Y);
+        this.foodlist.add(newFood);
+        //System.out.println(newFood.getId());
     }
     
-    public void drawFood() {
-    	if (this.food != null) {
-    		ellipse(this.food.getX(), this.food.getY(), 10,10);
+    //FOOD
+    public void drawFoodList() {
+    	if (this.foodlist != null) {
+    		for (int i = 0; i < foodlist.size(); i++) {
+    			Food currentFood = this.foodlist.get(i);
+    			if (!isEaten(currentFood)) {
+    				ellipse(currentFood.getX(), currentFood.getY(), 10,10);
+    			} else {
+    				//System.out.println("No " + currentFood.getId() + " is eaten!");
+    				this.foodlist.remove(i);
+            		snake.grow(GROWING_FACTOR);
+    			}
+    		}
     	}
+    	//System.out.println("Groesse der foodlist: " + this.foodlist.size());
     }
+    
     //FOOD
     // checks if the snake is close enough to eat the food
     public Boolean checkFoodProximity(float snakeInt, float foodInt) {
@@ -60,8 +80,8 @@ public class SnakeTest extends PApplet {
     }
     
     //FOOD
-    public Boolean isEaten() {
-    	return (checkFoodProximity(snake.head().x, food.getX()) && checkFoodProximity(snake.head().y, food.getY()));
+    public Boolean isEaten(Food currentFood) {
+    	return (checkFoodProximity(snake.head().x, currentFood.getX()) && checkFoodProximity(snake.head().y, currentFood.getY()));
     }
     
 
@@ -79,28 +99,29 @@ public class SnakeTest extends PApplet {
         drawSnake(snake);
         
         
-        //FOOD
-        if (food == null) {
+
+        
+        
+        // FOOD
+        if (this.foodlist.isEmpty()) {
         	setFood();
-        	//System.out.println(food.getId());
-        } else { 
-        	if (isEaten()) {
-        		//System.out.println("eaten");
-        		snake.grow(2);
-        		setFood();
-        		//System.out.println(food.getId());
-        	} else {
-        	drawFood();
-        	}
         }
         
+        if (Math.random() < 0.005) {
+        	if (this.foodlist.size() < MAX_FOOD) {
+        		setFood();
+        	}
+        	
+        }
+        drawFoodList();
+
         
         
     }
 
     @Override
     public void keyPressed(KeyEvent event) {
-        System.out.println(event.getKeyCode());
+        //System.out.println(event.getKeyCode());
 
         switch (event.getKeyCode()) {
             case 37:
