@@ -64,4 +64,12 @@ public class Snake {
     public List<PVector> getParts() {
         return parts;
     }
+
+    public void grow(int grow) {
+        PVector lastElement = parts.get(size - 1);
+
+        for (int i = 1; i <= grow; i++) {
+            parts.add(new PVector(lastElement.x, lastElement.y));
+        }
+    }
 }
