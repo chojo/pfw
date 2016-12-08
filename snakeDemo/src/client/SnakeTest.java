@@ -15,7 +15,6 @@ public class SnakeTest extends PApplet {
     public static final int SCREEN_X = 600;
     public static final int SCREEN_Y = 400;
 
-
     static PVector direction = new PVector(1,0);
     static Rotation rotation = Rotation.NONE;
     static Snake snake = new Snake(100,100);
@@ -23,11 +22,9 @@ public class SnakeTest extends PApplet {
 
     private PVector v = new PVector(100,100);
 
-
     public static void main(String[] args)  {
         PApplet.main("client.SnakeTest");
     }
-
 
     @Override
     public void settings() {
@@ -45,14 +42,6 @@ public class SnakeTest extends PApplet {
         println(v.x);
     }
 
-    public int getScreenX() {
-        return SCREEN_X;
-    }
-
-    public int getScreenY() {
-        return SCREEN_Y;
-    }
-    
     //FOOD
     public void setFood() { 
         this.food = new Food(SCREEN_X, SCREEN_Y);
@@ -77,7 +66,6 @@ public class SnakeTest extends PApplet {
     public Boolean isEaten() {
     	return (checkFoodProximity(snake.head().x, food.getX()) && checkFoodProximity(snake.head().y, food.getY()));
     }
-    
 
     @Override
     public void draw() {    	
