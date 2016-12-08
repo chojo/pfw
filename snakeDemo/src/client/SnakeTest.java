@@ -12,8 +12,8 @@ enum Rotation {
 
 public class SnakeTest extends PApplet {
 
-    public static final int SCREEN_X = 600;
-    public static final int SCREEN_Y = 400;
+    public static final int SCREEN_X = 1024;
+    public static final int SCREEN_Y = 768;
 
 
     static PVector direction = new PVector(1,0);
@@ -23,9 +23,6 @@ public class SnakeTest extends PApplet {
     String playerName = "AnonymousSnake";
 
     private Food food = null; //FOOD
-
-    private PVector v = new PVector(100,100);
-
 
     public static void main(String[] args)  {
         PApplet.main("client.SnakeTest");
@@ -40,12 +37,9 @@ public class SnakeTest extends PApplet {
 
     public void drawSnake(Snake snake) {
         for (int i = snake.getParts().size()-1; i>=0; i--) {
-            v = snake.getParts().get(i);
+            PVector v = snake.getParts().get(i);
             ellipse(v.x, v.y, 20,20);
-            PVector buffer = new PVector (v.x,v.y);
-            v = buffer;
         }
-        println(v.x);
     }
 
     public int getScreenX() {
@@ -93,10 +87,6 @@ public class SnakeTest extends PApplet {
         }
 
         snake.moveBy(direction);
-
-        if ((v.x  + 10) > SCREEN_X || (v.x  + 10) < 0 || (v.y  + 10) > SCREEN_Y ||(v.y  + 10) < 0)
-            System.out.println("GAME OVER");
-
         drawSnake(snake);
         
         
@@ -114,6 +104,9 @@ public class SnakeTest extends PApplet {
         	drawFood();
         	}
         }
+        
+        
+        
     }
 
     @Override

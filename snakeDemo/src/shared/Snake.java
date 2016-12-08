@@ -18,11 +18,6 @@ public class Snake {
         }
     }
 
-//    public PVector getPosition() {
-//        PVector buffer = new PVector (x,y);
-//        return buffer;
-//    }
-
     public void moveTo(PVector newHead) {
         List<PVector> newparts = new LinkedList<>();
         newparts.add(newHead.copy());
@@ -41,7 +36,7 @@ public class Snake {
 
     public void moveBy(PVector direction) {
 
-//        currentCoordinate();
+        currentCoordinate();
         // falls head nicht rand erreicht:
 
         moveTo(PVector.add(head(), direction));
@@ -49,17 +44,17 @@ public class Snake {
         // andernfalls gibt "Game Over" aus
 
     }
-//
-//    public void currentCoordinate() {
-//        SnakeTest snake = new SnakeTest();
-//        int maxWidth = snake.getScreenX();
-//        int maxHeight = snake.getScreenY();
-//
-//        String s = "The size of the canvas is ";
-//        println(s);
-//        println(maxWidth, "x", maxHeight);
-//
-//    }
+
+    public void currentCoordinate() {
+        SnakeTest snake = new SnakeTest();
+        int w = snake.getScreenX();
+        int h = snake.getScreenY();
+
+        String s = "The size is ";
+        println(s);
+        println(w, "x", h);
+        if 
+    }
 
     public PVector head() {
         return parts.get(0);
