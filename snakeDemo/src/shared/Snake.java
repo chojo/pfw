@@ -1,12 +1,9 @@
 package shared;
 
-import client.SnakeTest;
 import processing.core.PVector;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import static processing.core.PApplet.println;
 
 public class Snake {
     private int size = 20;
@@ -35,25 +32,7 @@ public class Snake {
     }
 
     public void moveBy(PVector direction) {
-
-        currentCoordinate();
-        // falls head nicht rand erreicht:
-
         moveTo(PVector.add(head(), direction));
-
-        // andernfalls gibt "Game Over" aus
-
-    }
-
-    public void currentCoordinate() {
-        SnakeTest snake = new SnakeTest();
-        int w = snake.getScreenX();
-        int h = snake.getScreenY();
-
-        String s = "The size is ";
-        println(s);
-        println(w, "x", h);
-        if 
     }
 
     public PVector head() {
