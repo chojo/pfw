@@ -99,12 +99,17 @@ public class SnakeTest extends PApplet {
 
         drawSnake(snake);
         
+        
         //FOOD
         if (food == null) {
         	setFood();
-        } else {
+        	//System.out.println(food.getId());
+        } else { 
         	if (isEaten()) {
+        		//System.out.println("eaten");
+//        		snake.grow(2);
         		setFood();
+        		//System.out.println(food.getId());
         	} else {
         	drawFood();
         	}
