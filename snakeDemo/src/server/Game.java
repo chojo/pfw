@@ -1,20 +1,22 @@
 package server;
 
-import processing.core.PVector;
-import shared.Snake;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import processing.core.PVector;
+
+import shared.Connection;
+import shared.Snake;
 
 public class Game extends Thread{
 
     class Player {
-        final PlayerConnection playerConnection;
+        final Connection connection;
         final Snake snake;
         final PVector direction;
 
-        public Player(PlayerConnection playerConnection, Snake snake, PVector direction) {
-            this.playerConnection = playerConnection;
+        public Player(Connection connection, Snake snake, PVector direction) {
+            this.connection = connection;
             this.snake = snake;
             this.direction = direction;
         }
@@ -24,7 +26,7 @@ public class Game extends Thread{
         }
 
         public String position() {
-            return "pos "+ playerConnection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
+            return "pos "+ connection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
         }
 
         public boolean borderCollision() {
@@ -36,17 +38,17 @@ public class Game extends Thread{
 
     private final Map<String, Player> players = new HashMap<>();
 
-    public synchronized void registerClient(PlayerConnection playerConnection) {
-        System.out.println("Client registered: "+ playerConnection.getPlayerName());
+    public synchronized void registerClient(Connection connection) {
+        System.out.println("Client registered: "+ connection.getPlayerName());
         players.put(
-                playerConnection.getPlayerName(),
-                new Player(playerConnection, new Snake(), new PVector(1,0))
+                connection.getPlayerName(),
+                new Player(connection, new Snake(), new PVector(1,0))
         );
     }
 
-    public synchronized void unregisterClient(PlayerConnection playerConnection) {
-        System.out.println("Client unregistered: "+ playerConnection.getPlayerName());
-        players.remove(playerConnection.getPlayerName());
+    public synchronized void unregisterClient(Connection connection) {
+        System.out.println("Client unregistered: "+ connection.getPlayerName());
+        players.remove(connection.getPlayerName());
     }
 
     @Override
@@ -70,7 +72,7 @@ public class Game extends Thread{
 
     private void broadcast(String position) {
         for (Player p : players.values()) {
-            p.playerConnection.send(position);
+            p.connection.send(position);
         }
     }
 

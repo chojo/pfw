@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -17,8 +18,7 @@ import shared.Snake;
 import shared.Food;
 import shared.GameSocket;
 import shared.Connection;
-
-import client.ServerConnection;
+import shared.MessageHandler;
 
 enum Rotation {
     NONE, LEFT, RIGHT
@@ -114,7 +114,6 @@ public class SnakeTest extends PApplet {
         try {
             connection = new ServerConnection(
                     new ClientGameSocket(this, "127.0.0.1", 3000), this);
-            connection.start();
         } catch(UnknownHostException e) {
             // FIXME This needs error handling.
             e.printStackTrace();
@@ -122,6 +121,8 @@ public class SnakeTest extends PApplet {
             // FIXME This needs error handling.
             e.printStackTrace();
         }
+        connection.putMessageHandler("pos", new PosMessageHandler());
+        connection.start();
     }
 
     @Override
@@ -207,5 +208,21 @@ public class SnakeTest extends PApplet {
 
     public Snake putSnake(String name, Snake snake) {
         return snakes.put(name, snake);
+    }
+
+    public class PosMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            String name = scanner.next();
+            final Snake snake = getSnake(name);
+            if (snake == null) {
+                putSnake(
+                        name, 
+                        new Snake(scanner.nextFloat(), scanner.nextFloat()));
+            } else {
+                snake.moveTo(
+                        new PVector(scanner.nextFloat(), scanner.nextFloat()));
+            }
+        }
     }
 }
