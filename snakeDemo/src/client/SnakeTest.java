@@ -167,6 +167,11 @@ public class SnakeTest extends PApplet {
         
     }
 
+    private void gameOver() {
+        // TODO Game over logic.
+        exit();
+    }
+
     @Override
     public void keyPressed(KeyEvent event) {
         //System.out.println(event.getKeyCode());
@@ -234,6 +239,7 @@ public class SnakeTest extends PApplet {
         @Override
         public void handle(Scanner scanner) {
             snakes.remove(scanner.next());
+            if (getSnake() == null) { gameOver(); }
         }
     }
 }
