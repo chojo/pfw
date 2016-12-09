@@ -26,14 +26,4 @@ public class PlayerConnection extends Connection {
         super.run();
         game.unregisterClient(this);
     }
-
-    @Override
-    public void handle(String msg) {
-        if (msg.startsWith("dir")) {
-            Scanner scanner =
-                new Scanner(msg.substring(3)).useLocale(Locale.US);
-            game.setDirection(
-                    getPlayerName(), scanner.nextFloat(), scanner.nextFloat());
-        }
-    }
 }
