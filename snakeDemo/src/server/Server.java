@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import shared.GameSocket;
+
 public class Server {
     private static Game game = new Game();
 
@@ -12,7 +14,7 @@ public class Server {
         game.start();
 
         while (true) {
-            Socket client = server.accept();
+            GameSocket client = new GameSocket(server.accept());
             System.out.println("Client connected");
             PlayerConnection playerConnection = new PlayerConnection(client, game);
             game.registerClient(playerConnection);
