@@ -28,7 +28,8 @@ public class Game extends Thread{
         }
 
         public boolean borderCollision() {
-            // return true if head reaches border canvas
+            // FIXME NYI
+            return false;
         }
 
     }
@@ -39,9 +40,7 @@ public class Game extends Thread{
         System.out.println("Client registered: "+ playerConnection.getPlayerName());
         players.put(
                 playerConnection.getPlayerName(),
-                new Player(
-                        playerConnection, new Snake(100,100), new PVector(1,0)
-                )
+                new Player(playerConnection, new Snake(), new PVector(1,0))
         );
     }
 
@@ -54,7 +53,7 @@ public class Game extends Thread{
     public void run() {
         while (true) {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
