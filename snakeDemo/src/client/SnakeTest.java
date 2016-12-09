@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -37,6 +38,7 @@ public class SnakeTest extends PApplet {
     static PVector direction = new PVector(1,0);
     static Rotation rotation = Rotation.NONE;
     static final Map<String, Snake> snakes = new HashMap<>();
+    static final Random random = new Random();
 
     String playerName;
 
@@ -107,7 +109,7 @@ public class SnakeTest extends PApplet {
     
     @Override
     public void setup() {
-        playerName = "AnonymousSnake";
+        playerName = "AnonymousSnake" + Integer.toString(random.nextInt(100));
         snakes.put(playerName, new Snake());
         try {
             connection = new ServerConnection(
