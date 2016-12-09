@@ -122,6 +122,7 @@ public class SnakeTest extends PApplet {
             e.printStackTrace();
         }
         connection.putMessageHandler("pos", new PosMessageHandler());
+        connection.putMessageHandler("die", new DieMessageHandler());
         connection.start();
     }
 
@@ -164,6 +165,11 @@ public class SnakeTest extends PApplet {
 
         
         
+    }
+
+    private void gameOver() {
+        // TODO Game over logic.
+        exit();
     }
 
     @Override
@@ -226,6 +232,14 @@ public class SnakeTest extends PApplet {
                 snake.moveTo(
                         new PVector(scanner.nextFloat(), scanner.nextFloat()));
             }
+        }
+    }
+
+    public class DieMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            snakes.remove(scanner.next());
+            if (getSnake() == null) { gameOver(); }
         }
     }
 }

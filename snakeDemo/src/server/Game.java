@@ -29,6 +29,10 @@ public class Game extends Thread{
             return "pos "+ connection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
         }
 
+        public String death() {
+            return "die " + connection.getPlayerName();
+        }
+
         public boolean borderCollision() {
             // FIXME NYI
             return false;
@@ -48,6 +52,8 @@ public class Game extends Thread{
 
     public synchronized void unregisterClient(Connection connection) {
         System.out.println("Client unregistered: "+ connection.getPlayerName());
+        broadcast(players.get(connection.getPlayerName()).death());
+        connection.close();
         players.remove(connection.getPlayerName());
     }
 
@@ -70,9 +76,9 @@ public class Game extends Thread{
         }
     }
 
-    private void broadcast(String position) {
+    private void broadcast(String message) {
         for (Player p : players.values()) {
-            p.connection.send(position);
+            p.connection.send(message);
         }
     }
 

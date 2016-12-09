@@ -38,6 +38,14 @@ public abstract class Connection extends Thread {
         gameSocket.getOutput().flush();
     }
 
+    public void close() {
+        try {
+            gameSocket.getSocket().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private String receive() throws IOException {
         return gameSocket.getInput().readLine();
     }
