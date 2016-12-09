@@ -31,7 +31,7 @@ public abstract class Connection extends Thread {
         gameSocket.getOutput().flush();
     }
 
-    public String receive() throws IOException {
+    private String receive() throws IOException {
         return gameSocket.getInput().readLine();
     }
 
