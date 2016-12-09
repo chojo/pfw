@@ -136,7 +136,10 @@ public class SnakeTest extends PApplet {
         }
 
         if (rotation != Rotation.NONE) {
-            connection.send("dir " + direction.x + " " + direction.y);
+            connection.send("dir "
+                    + playerName + " "
+                    + direction.x + " "
+                    + direction.y);
         }
 
         getSnake().moveBy(PVector.div(direction, frameRate));

@@ -30,7 +30,7 @@ public class Server {
         @Override
         public void handle(Scanner scanner) {
             game.setDirection(
-                    connection.getPlayerName(),
+                    scanner.next(),
                     scanner.nextFloat(),
                     scanner.nextFloat());
         }
