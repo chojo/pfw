@@ -1,13 +1,23 @@
 package client;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.LinkedList;
 import java.util.List;
 
 import processing.core.PApplet;
 import processing.core.PVector;
 import processing.event.KeyEvent;
+
 import shared.Snake;
 import shared.Food;
+import shared.GameSocket;
+import shared.Connection;
+
+import client.ServerConnection;
 
 enum Rotation {
     NONE, LEFT, RIGHT
@@ -22,11 +32,13 @@ public class SnakeTest extends PApplet {
     
     List<Food> foodlist = new LinkedList<>();
 
+    Connection connection;
+
     static PVector direction = new PVector(1,0);
     static Rotation rotation = Rotation.NONE;
-    static Snake snake = new Snake(100,100);
+    static final Map<String, Snake> snakes = new HashMap<>();
 
-    String playerName = "AnonymousSnake";
+    String playerName;
 
     public static void main(String[] args)  {
         PApplet.main("client.SnakeTest");
@@ -71,7 +83,7 @@ public class SnakeTest extends PApplet {
     			} else {
     				//System.out.println("No " + currentFood.getId() + " is eaten!");
     				this.foodlist.remove(i);
-            		snake.grow(GROWING_FACTOR);
+            		getSnake().grow(GROWING_FACTOR);
     			}
     		}
     	}
@@ -90,9 +102,25 @@ public class SnakeTest extends PApplet {
     
     //FOOD
     public Boolean isEaten(Food currentFood) {
-    	return (checkFoodProximity(snake.head().x, currentFood.getX()) && checkFoodProximity(snake.head().y, currentFood.getY()));
+    	return (checkFoodProximity(getSnake().head().x, currentFood.getX()) && checkFoodProximity(getSnake().head().y, currentFood.getY()));
     }
     
+    @Override
+    public void setup() {
+        playerName = "AnonymousSnake";
+        snakes.put(playerName, new Snake());
+        try {
+            connection = new ServerConnection(
+                    new ClientGameSocket(this, "127.0.0.1", 3000), this);
+            connection.start();
+        } catch(UnknownHostException e) {
+            // FIXME This needs error handling.
+            e.printStackTrace();
+        } catch(IOException e) {
+            // FIXME This needs error handling.
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void draw() {    	
@@ -104,8 +132,12 @@ public class SnakeTest extends PApplet {
             direction.rotate(0.1f);
         }
 
-        snake.moveBy(direction);
-        drawSnake(snake);
+        if (rotation != Rotation.NONE) {
+            connection.send("dir " + direction.x + " " + direction.y);
+        }
+
+        getSnake().moveBy(PVector.div(direction, frameRate));
+        drawSnake(getSnake());
         
         
 
@@ -147,7 +179,31 @@ public class SnakeTest extends PApplet {
         rotation = Rotation.NONE;
     }
 
+    public class ClientGameSocket extends GameSocket {
+        ClientGameSocket(PApplet pApplet, String host, int port)
+                throws UnknownHostException, IOException {
+            super(new Socket(host, port));
+            pApplet.registerMethod("dispose", this);
+        }
+
+        public void dispose() throws IOException {
+            this.getSocket().close();
+        }
+    }
+
     public String getPlayerName() {
         return playerName;
+    }
+
+    public Snake getSnake() {
+        return getSnake(playerName);
+    }
+
+    public Snake getSnake(String name) {
+        return snakes.get(name);
+    }
+
+    public Snake putSnake(String name, Snake snake) {
+        return snakes.put(name, snake);
     }
 }

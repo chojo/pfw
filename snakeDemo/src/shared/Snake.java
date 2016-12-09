@@ -7,7 +7,12 @@ import java.util.List;
 
 public class Snake {
     private int size = 20;
+    private int speed = 50;
     private List<PVector> parts = new LinkedList<>();
+
+    public Snake() {
+        this(100, 100);
+    }
 
     public Snake(float x, float y) {
         for (int i=0; i< size; i++) {
@@ -32,7 +37,7 @@ public class Snake {
     }
 
     public void moveBy(PVector direction) {
-        moveTo(PVector.add(head(), direction));
+        moveTo(PVector.add(head(), PVector.mult(direction, speed)));
     }
 
     public PVector head() {
