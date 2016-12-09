@@ -20,8 +20,6 @@ import shared.GameSocket;
 import shared.Connection;
 import shared.MessageHandler;
 
-import client.ServerConnection;
-
 enum Rotation {
     NONE, LEFT, RIGHT
 }

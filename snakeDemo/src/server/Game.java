@@ -1,12 +1,12 @@
 package server;
 
-import processing.core.PVector;
-import shared.Snake;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import processing.core.PVector;
+
 import shared.Connection;
+import shared.Snake;
 
 public class Game extends Thread{
 
