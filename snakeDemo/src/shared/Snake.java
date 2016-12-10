@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Snake {
-    private int size = 20;
-    private int speed = 50;
+    public static final int SIZE = 20;
+    public static final int SPEED = 50;
     private List<PVector> parts = new LinkedList<>();
 
     public Snake() {
@@ -15,7 +15,7 @@ public class Snake {
     }
 
     public Snake(float x, float y) {
-        for (int i=0; i< size; i++) {
+        for (int i = 0; i < SIZE; i++) {
             parts.add(new PVector(x,y));
         }
     }
@@ -37,7 +37,7 @@ public class Snake {
     }
 
     public void moveBy(PVector direction) {
-        moveTo(PVector.add(head(), PVector.mult(direction, speed)));
+        moveTo(PVector.add(head(), PVector.mult(direction, SPEED)));
     }
 
     public PVector head() {
@@ -50,7 +50,7 @@ public class Snake {
     }
 
     public void grow(int grow) {
-        PVector lastElement = parts.get(size - 1);
+        PVector lastElement = parts.get(SIZE - 1);
 
         for (int i = 1; i <= grow; i++) {
             parts.add(new PVector(lastElement.x, lastElement.y));

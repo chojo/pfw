@@ -1,12 +1,6 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Locale;
-import java.util.Scanner;
 
 import shared.Connection;
 import shared.GameSocket;
@@ -25,15 +19,5 @@ public class PlayerConnection extends Connection {
     public void run() {
         super.run();
         game.unregisterClient(this);
-    }
-
-    @Override
-    public void handle(String msg) {
-        if (msg.startsWith("dir")) {
-            Scanner scanner =
-                new Scanner(msg.substring(3)).useLocale(Locale.US);
-            game.setDirection(
-                    getPlayerName(), scanner.nextFloat(), scanner.nextFloat());
-        }
     }
 }

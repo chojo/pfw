@@ -1,45 +1,24 @@
 package shared;
 
+import java.util.Random;
+
 import processing.core.PVector;
 
-public class Food {
-	
-	public PVector food = null;
-	public float posX;
-    public float posY;
-    static int number = 0;
-    int id;
-	
-	public Food(int windowWidth, int windowHeight) {
-		setX(windowWidth);
-		setY(windowHeight);
-		food = new PVector(this.posX,this.posY);
-		setId(number);
-		number++;
-    }
-	
-	private void setX(int windowWidth) {
-		posX = (float)Math.random()*windowWidth;
-	}
-	
-	public float getX() {
-		return food.x;
-	}
-	
-	private void setY(int windowHeight) {
-		posY = (float)Math.random()*windowHeight;
-	}
-	
-	public float getY() {
-		return food.y;
-	}
-	
-	private void setId(int newId) {
-		id = newId;
-	}
-	
-	public int getId() {
-		return id;
-	}
+public class Food extends PVector {
+    public static final int SIZE = 10;
+    public static final int GROWTH_FACTOR = 2;
 
+    static final Random random = new Random();
+    private static final long serialVersionUID = 43L;
+
+    public Food(float x, float y) { super(x, y); }
+
+    public static Food randomFood(int fieldWidth, int fieldHeight) {
+        return new Food(
+                random.nextInt(fieldWidth), random.nextInt(fieldHeight));
+    }
+
+    public String getMessage() {
+        return "feed " + Float.toString(x) + " " + Float.toString(y);
+    }
 }
