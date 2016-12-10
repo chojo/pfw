@@ -31,7 +31,7 @@ public class SnakeTest extends PApplet {
     public static final int MAX_FOOD = 30;
     public static final int GROWING_FACTOR = 2;
     
-    List<Food> foodlist = new LinkedList<>();
+    List<Food> foods = new LinkedList<>();
 
     Connection connection;
 
@@ -66,45 +66,6 @@ public class SnakeTest extends PApplet {
 
     public int getScreenY() {
         return SCREEN_Y;
-    }
-    
-    //FOOD
-    public void setFood() { 
-        Food newFood = new Food(SCREEN_X, SCREEN_Y);
-        this.foodlist.add(newFood);
-        //System.out.println(newFood.getId());
-    }
-    
-    //FOOD
-    public void drawFoodList() {
-    	if (this.foodlist != null) {
-    		for (int i = 0; i < foodlist.size(); i++) {
-    			Food currentFood = this.foodlist.get(i);
-    			if (!isEaten(currentFood)) {
-    				ellipse(currentFood.getX(), currentFood.getY(), 10,10);
-    			} else {
-    				//System.out.println("No " + currentFood.getId() + " is eaten!");
-    				this.foodlist.remove(i);
-            		getSnake().grow(GROWING_FACTOR);
-    			}
-    		}
-    	}
-    	//System.out.println("Groesse der foodlist: " + this.foodlist.size());
-    }
-    
-    //FOOD
-    // checks if the snake is close enough to eat the food
-    public Boolean checkFoodProximity(float snakeInt, float foodInt) {
-    	int s = (int)snakeInt;
-    	int f = (int)foodInt;
-    	int closerThan = 10;
-    	
-    	return (Math.abs((long)(s - f)) <= closerThan);
-    }
-    
-    //FOOD
-    public Boolean isEaten(Food currentFood) {
-    	return (checkFoodProximity(getSnake().head().x, currentFood.getX()) && checkFoodProximity(getSnake().head().y, currentFood.getY()));
     }
     
     @Override
@@ -146,25 +107,19 @@ public class SnakeTest extends PApplet {
         getSnake().moveBy(PVector.div(direction, frameRate));
         drawSnake(getSnake());
         
-        
-
-        
-        
-        // FOOD
-        if (this.foodlist.isEmpty()) {
-        	setFood();
+        if (foods.size() <= random.nextInt(MAX_FOOD)) {
+            foods.add(new Food(SCREEN_X, SCREEN_Y));
         }
-        
-        if (Math.random() < 0.005) {
-        	if (this.foodlist.size() < MAX_FOOD) {
-        		setFood();
-        	}
-        	
-        }
-        drawFoodList();
 
-        
-        
+        for (int i = 0; i < foods.size(); i++) {
+            Food food = foods.get(i);
+            if (getSnake().head().dist(food) > 10) {
+                ellipse(food.x, food.y, 10,10);
+            } else {
+                foods.remove(i);
+                getSnake().grow(GROWING_FACTOR);
+            }
+        }
     }
 
     private void gameOver() {
