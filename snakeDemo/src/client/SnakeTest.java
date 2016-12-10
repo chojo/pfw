@@ -83,6 +83,7 @@ public class SnakeTest extends PApplet {
             e.printStackTrace();
         }
         connection.putMessageHandler("pos", new PosMessageHandler());
+        connection.putMessageHandler("score", new ScoreMessageHandler());
         connection.putMessageHandler("die", new DieMessageHandler());
         connection.putMessageHandler("eat", new EatMessageHandler());
         connection.putMessageHandler("feed", new FeedMessageHandler());
@@ -181,6 +182,13 @@ public class SnakeTest extends PApplet {
                 snake.moveTo(
                         new PVector(scanner.nextFloat(), scanner.nextFloat()));
             }
+        }
+    }
+
+    public class ScoreMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            getSnake(scanner.next()).grow(scanner.nextInt() - Snake.SIZE);
         }
     }
 
