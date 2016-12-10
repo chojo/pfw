@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.Collections;
 
 import processing.core.PVector;
 
@@ -65,7 +64,7 @@ public class Game extends Thread{
     static final Random random = new Random();
 
     private final Map<String, Player> players = new HashMap<>();
-    final List<Food> foods = Collections.synchronizedList(new LinkedList<>());
+    final List<Food> foods = new LinkedList<>();
 
     public synchronized void registerClient(Connection connection) {
         System.out.println("Client registered: "+ connection.getPlayerName());
