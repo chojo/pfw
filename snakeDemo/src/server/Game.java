@@ -30,6 +30,18 @@ public class Game extends Thread{
             snake.moveBy(direction);
         }
 
+        public void eat() {
+            for (int i = 0; i < foods.size(); i++) {
+                Food food = foods.get(i);
+                if (snake.head().dist(food) < Food.FOOD_SIZE + Snake.SPEED) {
+                    foods.remove(i);
+                    broadcast("eat "
+                            + connection.getPlayerName() + " "
+                            + Integer.toString(i));
+                }
+            }
+        }
+
         public String position() {
             return "pos "+ connection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
         }
@@ -81,6 +93,7 @@ public class Game extends Thread{
 
             for (Player player : players.values()) {
                 player.move();
+                player.eat();
             }
 
             for (Player player : players.values()) {

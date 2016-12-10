@@ -110,13 +110,9 @@ public class SnakeTest extends PApplet {
         getSnake().moveBy(PVector.div(direction, frameRate));
         drawSnake(getSnake());
 
-        for (int i = 0; i < foods.size(); i++) {
-            Food food = foods.get(i);
-            if (getSnake().head().dist(food) > 10) {
-                ellipse(food.x, food.y, 10,10);
-            } else {
-                foods.remove(i);
-                getSnake().grow(GROWING_FACTOR);
+        synchronized (foods) {
+            for (Food food : foods) {
+                ellipse(food.x, food.y, Food.FOOD_SIZE, Food.FOOD_SIZE);
             }
         }
     }
