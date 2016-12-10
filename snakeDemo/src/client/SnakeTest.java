@@ -30,7 +30,6 @@ public class SnakeTest extends PApplet {
     public static final int SCREEN_X = 1024;
     public static final int SCREEN_Y = 768;
     public static final int MAX_FOOD = 30;
-    public static final int GROWING_FACTOR = 2;
     
     List<Food> foods = Collections.synchronizedList(new LinkedList<>());
 
@@ -196,7 +195,7 @@ public class SnakeTest extends PApplet {
     public class EatMessageHandler implements MessageHandler {
         @Override
         public void handle(Scanner scanner) {
-            getSnake(scanner.next()).grow(GROWING_FACTOR);
+            getSnake(scanner.next()).grow(Food.GROWTH_FACTOR);
             foods.remove(scanner.nextInt());
         }
     }
