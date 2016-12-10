@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Collections;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -31,7 +32,7 @@ public class SnakeTest extends PApplet {
     public static final int MAX_FOOD = 30;
     public static final int GROWING_FACTOR = 2;
     
-    List<Food> foods = new LinkedList<>();
+    List<Food> foods = Collections.synchronizedList(new LinkedList<>());
 
     Connection connection;
 
