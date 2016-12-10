@@ -11,14 +11,4 @@ public class Food extends PVector {
     public Food(int fieldWidth, int fieldHeight) {
         super(random.nextInt(fieldWidth), random.nextInt(fieldHeight));
     }
-
-    @Deprecated
-    public float getX() {
-        return x;
-    }
-
-    @Deprecated
-    public float getY() {
-        return y;
-    }
 }
