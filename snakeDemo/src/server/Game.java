@@ -15,8 +15,6 @@ public class Game extends Thread{
         final Snake snake;
         final PVector direction;
 
-        public static final String message = "Game Over.";
-
         public Player(PlayerConnection playerConnection, Snake snake, PVector direction) {
             this.playerConnection = playerConnection;
             this.snake = snake;
@@ -40,9 +38,8 @@ public class Game extends Thread{
             return (v.x  + 10) > Server.FIELD_X || (v.x  + 10) < 0 || (v.y  + 10) > Server.FIELD_Y || (v.y  + 10) < 0;
         }
 
-        PFont f;
-
         void setup() {
+            PFont f;
             size(200,200);
             f = createFont("Arial",16,true);
         }
