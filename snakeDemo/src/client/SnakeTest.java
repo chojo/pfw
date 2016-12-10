@@ -108,7 +108,7 @@ public class SnakeTest extends PApplet {
         drawSnake(getSnake());
         
         if (foods.size() <= random.nextInt(MAX_FOOD)) {
-            foods.add(new Food(SCREEN_X, SCREEN_Y));
+            foods.add(Food.randomFood(SCREEN_X, SCREEN_Y));
         }
 
         for (int i = 0; i < foods.size(); i++) {
