@@ -33,7 +33,7 @@ public class Game extends Thread{
         public void eat() {
             for (int i = 0; i < foods.size(); i++) {
                 Food food = foods.get(i);
-                if (snake.head().dist(food) < Food.FOOD_SIZE + Snake.SPEED) {
+                if (snake.head().dist(food) < Food.SIZE + Snake.SPEED) {
                     foods.remove(i);
                     broadcast("eat "
                             + connection.getPlayerName() + " "

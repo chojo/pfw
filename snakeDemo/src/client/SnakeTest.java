@@ -112,7 +112,7 @@ public class SnakeTest extends PApplet {
 
         synchronized (foods) {
             for (Food food : foods) {
-                ellipse(food.x, food.y, Food.FOOD_SIZE, Food.FOOD_SIZE);
+                ellipse(food.x, food.y, Food.SIZE, Food.SIZE);
             }
         }
     }

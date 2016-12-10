@@ -5,7 +5,7 @@ import java.util.Random;
 import processing.core.PVector;
 
 public class Food extends PVector {
-    public static final int FOOD_SIZE = 10;
+    public static final int SIZE = 10;
     public static final int GROWTH_FACTOR = 2;
 
     static final Random random = new Random();
