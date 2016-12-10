@@ -26,8 +26,8 @@ enum Rotation {
 
 public class SnakeTest extends PApplet {
 
-    public static final int SCREEN_X = 1024;
-    public static final int SCREEN_Y = 768;
+    public static final int SCREEN_X = server.Server.FIELD_X;
+    public static final int SCREEN_Y = server.Server.FIELD_Y;
     public static final int MAX_FOOD = 30;
     public static final int GROWING_FACTOR = 2;
     
@@ -60,14 +60,6 @@ public class SnakeTest extends PApplet {
         }
     }
 
-    public int getScreenX() {
-        return SCREEN_X;
-    }
-
-    public int getScreenY() {
-        return SCREEN_Y;
-    }
-    
     //FOOD
     public void setFood() { 
         Food newFood = new Food(SCREEN_X, SCREEN_Y);
