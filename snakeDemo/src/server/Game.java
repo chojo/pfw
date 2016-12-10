@@ -34,6 +34,7 @@ public class Game extends Thread{
             for (int i = 0; i < foods.size(); i++) {
                 Food food = foods.get(i);
                 if (snake.head().dist(food) < Food.SIZE + Snake.SPEED) {
+                    snake.grow(Food.GROWTH_FACTOR);
                     foods.remove(i);
                     broadcast("eat "
                             + connection.getPlayerName() + " "
