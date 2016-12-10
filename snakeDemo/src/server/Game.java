@@ -59,6 +59,7 @@ public class Game extends Thread{
                 connection.getPlayerName(),
                 new Player(connection, new Snake(), new PVector(1,0))
         );
+        for (Food food : foods) { connection.send(food.getMessage()); }
     }
 
     public synchronized void unregisterClient(Connection connection) {
