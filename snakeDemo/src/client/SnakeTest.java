@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Collections;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -29,9 +30,8 @@ public class SnakeTest extends PApplet {
     public static final int SCREEN_X = 1024;
     public static final int SCREEN_Y = 768;
     public static final int MAX_FOOD = 30;
-    public static final int GROWING_FACTOR = 2;
     
-    List<Food> foodlist = new LinkedList<>();
+    List<Food> foods = Collections.synchronizedList(new LinkedList<>());
 
     Connection connection;
 
@@ -68,45 +68,6 @@ public class SnakeTest extends PApplet {
         return SCREEN_Y;
     }
     
-    //FOOD
-    public void setFood() { 
-        Food newFood = new Food(SCREEN_X, SCREEN_Y);
-        this.foodlist.add(newFood);
-        //System.out.println(newFood.getId());
-    }
-    
-    //FOOD
-    public void drawFoodList() {
-    	if (this.foodlist != null) {
-    		for (int i = 0; i < foodlist.size(); i++) {
-    			Food currentFood = this.foodlist.get(i);
-    			if (!isEaten(currentFood)) {
-    				ellipse(currentFood.getX(), currentFood.getY(), 10,10);
-    			} else {
-    				//System.out.println("No " + currentFood.getId() + " is eaten!");
-    				this.foodlist.remove(i);
-            		getSnake().grow(GROWING_FACTOR);
-    			}
-    		}
-    	}
-    	//System.out.println("Groesse der foodlist: " + this.foodlist.size());
-    }
-    
-    //FOOD
-    // checks if the snake is close enough to eat the food
-    public Boolean checkFoodProximity(float snakeInt, float foodInt) {
-    	int s = (int)snakeInt;
-    	int f = (int)foodInt;
-    	int closerThan = 10;
-    	
-    	return (Math.abs((long)(s - f)) <= closerThan);
-    }
-    
-    //FOOD
-    public Boolean isEaten(Food currentFood) {
-    	return (checkFoodProximity(getSnake().head().x, currentFood.getX()) && checkFoodProximity(getSnake().head().y, currentFood.getY()));
-    }
-    
     @Override
     public void setup() {
         playerName = "AnonymousSnake" + Integer.toString(random.nextInt(100));
@@ -122,7 +83,10 @@ public class SnakeTest extends PApplet {
             e.printStackTrace();
         }
         connection.putMessageHandler("pos", new PosMessageHandler());
+        connection.putMessageHandler("score", new ScoreMessageHandler());
         connection.putMessageHandler("die", new DieMessageHandler());
+        connection.putMessageHandler("eat", new EatMessageHandler());
+        connection.putMessageHandler("feed", new FeedMessageHandler());
         connection.start();
     }
 
@@ -145,26 +109,12 @@ public class SnakeTest extends PApplet {
 
         getSnake().moveBy(PVector.div(direction, frameRate));
         drawSnake(getSnake());
-        
-        
 
-        
-        
-        // FOOD
-        if (this.foodlist.isEmpty()) {
-        	setFood();
+        synchronized (foods) {
+            for (Food food : foods) {
+                ellipse(food.x, food.y, Food.SIZE, Food.SIZE);
+            }
         }
-        
-        if (Math.random() < 0.005) {
-        	if (this.foodlist.size() < MAX_FOOD) {
-        		setFood();
-        	}
-        	
-        }
-        drawFoodList();
-
-        
-        
     }
 
     private void gameOver() {
@@ -235,11 +185,33 @@ public class SnakeTest extends PApplet {
         }
     }
 
+    public class ScoreMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            getSnake(scanner.next()).grow(scanner.nextInt() - Snake.SIZE);
+        }
+    }
+
     public class DieMessageHandler implements MessageHandler {
         @Override
         public void handle(Scanner scanner) {
             snakes.remove(scanner.next());
             if (getSnake() == null) { gameOver(); }
+        }
+    }
+
+    public class EatMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            getSnake(scanner.next()).grow(Food.GROWTH_FACTOR);
+            foods.remove(scanner.nextInt());
+        }
+    }
+
+    public class FeedMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            foods.add(new Food(scanner.nextFloat(), scanner.nextFloat()));
         }
     }
 }
