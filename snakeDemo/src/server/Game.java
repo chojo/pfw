@@ -46,6 +46,12 @@ public class Game extends Thread{
             return "pos "+ connection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
         }
 
+        public String score() {
+            return "score "
+                + connection.getPlayerName() + " "
+                + snake.getParts().size();
+        }
+
         public String death() {
             return "die " + connection.getPlayerName();
         }
@@ -73,6 +79,9 @@ public class Game extends Thread{
                 new Player(connection, new Snake(), new PVector(1,0))
         );
         for (Food food : foods) { connection.send(food.getMessage()); }
+        for (Player player : players.values()) {
+            connection.send(player.position() + "\n" + player.score());
+        }
     }
 
     public synchronized void unregisterClient(Connection connection) {
