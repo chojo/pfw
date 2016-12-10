@@ -14,4 +14,8 @@ public class Food extends PVector {
         return new Food(
                 random.nextInt(fieldWidth), random.nextInt(fieldHeight));
     }
+
+    public String getMessage() {
+        return "feed " + Float.toString(x) + " " + Float.toString(y);
+    }
 }
