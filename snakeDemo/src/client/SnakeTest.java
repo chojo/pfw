@@ -84,6 +84,8 @@ public class SnakeTest extends PApplet {
         }
         connection.putMessageHandler("pos", new PosMessageHandler());
         connection.putMessageHandler("die", new DieMessageHandler());
+        connection.putMessageHandler("eat", new EatMessageHandler());
+        connection.putMessageHandler("feed", new FeedMessageHandler());
         connection.start();
     }
 
@@ -106,10 +108,6 @@ public class SnakeTest extends PApplet {
 
         getSnake().moveBy(PVector.div(direction, frameRate));
         drawSnake(getSnake());
-        
-        if (foods.size() <= random.nextInt(MAX_FOOD)) {
-            foods.add(Food.randomFood(SCREEN_X, SCREEN_Y));
-        }
 
         for (int i = 0; i < foods.size(); i++) {
             Food food = foods.get(i);
@@ -195,6 +193,21 @@ public class SnakeTest extends PApplet {
         public void handle(Scanner scanner) {
             snakes.remove(scanner.next());
             if (getSnake() == null) { gameOver(); }
+        }
+    }
+
+    public class EatMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            getSnake(scanner.next()).grow(GROWING_FACTOR);
+            foods.remove(scanner.nextInt());
+        }
+    }
+
+    public class FeedMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner) {
+            foods.add(new Food(scanner.nextFloat(), scanner.nextFloat()));
         }
     }
 }
