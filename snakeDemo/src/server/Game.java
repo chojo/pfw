@@ -9,6 +9,7 @@ import java.util.Map;
 public class Game extends Thread{
 
     class Player {
+
         final PlayerConnection playerConnection;
         final Snake snake;
         final PVector direction;
@@ -20,16 +21,20 @@ public class Game extends Thread{
         }
 
         public void move() {
-            snake.moveBy(direction);
+            if ( !borderCollision( snake.head() ) ) {
+                snake.moveBy(direction);
+            } else {
+                unregisterClient( playerConnection );
+            }
         }
+
 
         public String position() {
             return "pos "+ playerConnection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
         }
 
-        public boolean borderCollision() {
-            // FIXME NYI
-            return false;
+        public boolean borderCollision( PVector v ) {
+            return (v.x  + 10) > Server.FIELD_X || (v.x  + 10) < 0 || (v.y  + 10) > Server.FIELD_Y || (v.y  + 10) < 0;
         }
 
     }

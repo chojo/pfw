@@ -7,10 +7,13 @@ import java.net.Socket;
 import shared.GameSocket;
 
 public class Server {
+    public static final int FIELD_X = 424;
+    public static final int FIELD_Y = 768;
+
     private static Game game = new Game();
 
     public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(3000);
+        ServerSocket server = new ServerSocket(4000);
         game.start();
 
         while (true) {

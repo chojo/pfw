@@ -113,7 +113,7 @@ public class SnakeTest extends PApplet {
         snakes.put(playerName, new Snake());
         try {
             connection = new ServerConnection(
-                    new ClientGameSocket(this, "127.0.0.1", 3000), this);
+                    new ClientGameSocket(this, "127.0.0.1", 4000), this);
             connection.start();
         } catch(UnknownHostException e) {
             // FIXME This needs error handling.
