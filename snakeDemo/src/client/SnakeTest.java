@@ -92,7 +92,6 @@ public class SnakeTest extends PApplet {
 
         if (getSnake().isTurning()) {
             connection.send("dir "
-                    + playerName + " "
                     + getSnake().getDirection().x + " "
                     + getSnake().getDirection().y);
         }
@@ -158,7 +157,7 @@ public class SnakeTest extends PApplet {
 
     public class PosMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             String name = scanner.next();
             final Snake snake = getSnake(name);
             if (snake == null) {
@@ -177,14 +176,14 @@ public class SnakeTest extends PApplet {
 
     public class ScoreMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             getSnake(scanner.next()).grow(scanner.nextInt() - Snake.SIZE);
         }
     }
 
     public class DieMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             snakes.remove(scanner.next());
             if (getSnake() == null) { gameOver(); }
         }
@@ -192,7 +191,7 @@ public class SnakeTest extends PApplet {
 
     public class EatMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             getSnake(scanner.next()).grow(Food.GROWTH_FACTOR);
             foods.remove(scanner.nextInt());
         }
@@ -200,7 +199,7 @@ public class SnakeTest extends PApplet {
 
     public class FeedMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             foods.add(new Food(scanner.nextFloat(), scanner.nextFloat()));
         }
     }
