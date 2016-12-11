@@ -117,7 +117,7 @@ public class Game extends Thread{
         }
     }
 
-    private void broadcast(String message) {
+    public void broadcast(String message) {
         for (Player p : players.values()) {
             p.connection.send(message);
         }

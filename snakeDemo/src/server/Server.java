@@ -31,7 +31,7 @@ public class Server {
             Float x = scanner.nextFloat();
             Float y = scanner.nextFloat();
             game.setDirection(connection.getPlayerName(), x, y);
-            connection.send("dir "
+            game.broadcast("dir "
                     + connection.getPlayerName() + " "
                     + Float.toString(x) + " "
                     + Float.toString(y));
