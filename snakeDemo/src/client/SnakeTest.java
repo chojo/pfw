@@ -65,7 +65,7 @@ public class SnakeTest extends PApplet {
     @Override
     public void setup() {
         playerName = "AnonymousSnake" + Integer.toString(random.nextInt(100));
-        snakes.put(playerName, new Snake());
+        snakes.put(playerName, new Snake(playerName));
         try {
             connection = new ServerConnection(
                     new ClientGameSocket(this, "127.0.0.1", 3000), this);
@@ -169,6 +169,7 @@ public class SnakeTest extends PApplet {
                 putSnake(
                         name, 
                         new Snake(
+                            name,
                             scanner.nextFloat(),
                             scanner.nextFloat(),
                             new PVector(1, 0)));

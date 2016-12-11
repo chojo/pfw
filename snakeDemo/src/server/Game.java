@@ -74,7 +74,7 @@ public class Game extends Thread{
         System.out.println("Client registered: "+ connection.getPlayerName());
         players.put(
                 connection.getPlayerName(),
-                new Player(connection, new Snake())
+                new Player(connection, new Snake(connection.getPlayerName()))
         );
         for (Food food : foods) { connection.send(food.getMessage()); }
         for (Player player : players.values()) {
