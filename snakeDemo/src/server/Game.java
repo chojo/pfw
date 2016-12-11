@@ -90,7 +90,9 @@ public class Game extends Thread{
         connection.putMessageHandler("dir", new DirMessageHandler());
         for (Food food : foods) { connection.send(food.getMessage()); }
         for (Player player : players.values()) {
-            connection.send(player.position() + "\n" + player.score());
+            connection.send(player.position() + "\n"
+                    + player.direction() + "\n"
+                    + player.score());
         }
     }
 
