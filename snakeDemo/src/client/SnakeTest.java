@@ -52,6 +52,10 @@ public class SnakeTest extends PApplet {
             PVector v = snake.getParts().get(i);
             ellipse(v.x, v.y, 20,20);
         }
+        fill(0);
+        PVector textPosition = PVector.div(PVector.add(snake.head(), snake.tail()), 2);
+        text(snake.getName(), textPosition.x, textPosition.y);
+        fill(255);
     }
 
     public int getScreenX() {
@@ -88,6 +92,7 @@ public class SnakeTest extends PApplet {
     @Override
     public void draw() {    	
         background(255);
+        textAlign(CENTER, CENTER);
 
         synchronized (snakes) {
             for (Snake snake : snakes.values()) {
