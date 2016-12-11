@@ -47,6 +47,13 @@ public class Game extends Thread{
             return "pos "+ connection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
         }
 
+        public String direction() {
+            return "dir "
+                + connection.getPlayerName() + " "
+                + snake.getDirection().x + " "
+                + snake.getDirection().y;
+        }
+
         public String score() {
             return "score "
                 + connection.getPlayerName() + " "
@@ -133,13 +140,11 @@ public class Game extends Thread{
     public class DirMessageHandler implements MessageHandler {
         @Override
         public void handle(Scanner scanner, Connection connection) {
-            Float x = scanner.nextFloat();
-            Float y = scanner.nextFloat();
-            setDirection(connection.getPlayerName(), x, y);
-            broadcast("dir "
-                    + connection.getPlayerName() + " "
-                    + Float.toString(x) + " "
-                    + Float.toString(y));
+            setDirection(
+                    connection.getPlayerName(),
+                    scanner.nextFloat(),
+                    scanner.nextFloat());
+            broadcast(players.get(connection.getPlayerName()).direction());
         }
     }
 }
