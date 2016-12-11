@@ -27,6 +27,7 @@ public class Game extends Thread{
 
         public void move() {
             snake.moveBy(TICK_DURATION);
+            if (borderCollision()) { unregisterClient(connection); }
         }
 
         public void eat() {
