@@ -178,7 +178,9 @@ public class SnakeTest extends PApplet {
     public class DirMessageHandler implements MessageHandler {
         @Override
         public void handle(Scanner scanner, Connection connection) {
-            getSnake(scanner.next())
+            String name = scanner.next();
+            if (playerName.equals(name)) { return; }
+            getSnake(name)
                 .setDirection(
                         new PVector(scanner.nextFloat(), scanner.nextFloat()));
         }
