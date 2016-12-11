@@ -28,10 +28,13 @@ public class Server {
     public static class DirMessageHandler implements MessageHandler {
         @Override
         public void handle(Scanner scanner, Connection connection) {
-            game.setDirection(
-                    connection.getPlayerName(),
-                    scanner.nextFloat(),
-                    scanner.nextFloat());
+            Float x = scanner.nextFloat();
+            Float y = scanner.nextFloat();
+            game.setDirection(connection.getPlayerName(), x, y);
+            connection.send("dir "
+                    + connection.getPlayerName() + " "
+                    + Float.toString(x) + " "
+                    + Float.toString(y));
         }
     }
 }
