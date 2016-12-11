@@ -61,6 +61,10 @@ public class Snake {
         return parts.get(0);
     }
 
+    public PVector tail() {
+        return parts.get(parts.size() - 1);
+    }
+
     public String getName() {
         return name;
     }
