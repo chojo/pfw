@@ -24,13 +24,14 @@ public class Game extends Thread{
         }
 
         public void move() {
-            snake.moveBy(1f);
+            snake.moveBy(TICK_DURATION);
         }
 
         public void eat() {
             for (int i = 0; i < foods.size(); i++) {
                 Food food = foods.get(i);
-                if (snake.head().dist(food) < Food.SIZE + Snake.SPEED) {
+                if (snake.head().dist(food)
+                        < Food.SIZE + Snake.SPEED * TICK_DURATION) {
                     snake.grow(Food.GROWTH_FACTOR);
                     foods.remove(i);
                     broadcast("eat "
@@ -64,6 +65,7 @@ public class Game extends Thread{
     public static final int FIELD_X = 1024;
     public static final int FIELD_Y = 768;
     public static final int MAX_FOOD = 30;
+    public static final float TICK_DURATION = 0.1f;
 
     static final Random random = new Random();
 
@@ -93,7 +95,7 @@ public class Game extends Thread{
     public void run() {
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep((long) (TICK_DURATION * 1000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
