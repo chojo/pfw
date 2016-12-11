@@ -52,6 +52,10 @@ public class SnakeTest extends PApplet {
             PVector v = snake.getParts().get(i);
             ellipse(v.x, v.y, 20,20);
         }
+        fill(0);
+        PVector textPosition = PVector.div(PVector.add(snake.head(), snake.tail()), 2);
+        text(snake.getName(), textPosition.x, textPosition.y);
+        fill(255);
     }
 
     public int getScreenX() {
@@ -65,7 +69,7 @@ public class SnakeTest extends PApplet {
     @Override
     public void setup() {
         playerName = "AnonymousSnake" + Integer.toString(random.nextInt(100));
-        snakes.put(playerName, new Snake());
+        snakes.put(playerName, new Snake(playerName));
         try {
             connection = new ServerConnection(
                     new ClientGameSocket(this, "127.0.0.1", 3000), this);
@@ -88,10 +92,12 @@ public class SnakeTest extends PApplet {
     @Override
     public void draw() {    	
         background(255);
+        textAlign(CENTER, CENTER);
 
         synchronized (snakes) {
             for (Snake snake : snakes.values()) {
                 snake.moveBy(1 / frameRate);
+                drawSnake(snake);
             }
         }
 
@@ -101,7 +107,6 @@ public class SnakeTest extends PApplet {
                     + getSnake().getDirection().y);
         }
 
-        drawSnake(getSnake());
 
         synchronized (foods) {
             for (Food food : foods) {
@@ -169,6 +174,7 @@ public class SnakeTest extends PApplet {
                 putSnake(
                         name, 
                         new Snake(
+                            name,
                             scanner.nextFloat(),
                             scanner.nextFloat(),
                             new PVector(1, 0)));

@@ -13,19 +13,22 @@ public class Snake {
     public static final int SIZE = 20;
     public static final int SPEED = 50;
 
+    final String name;
+
     private PVector direction;
     private Rotation rotation = Rotation.NONE;
     private List<PVector> parts = new LinkedList<>();
 
-    public Snake() {
-        this(100, 100, new PVector(1, 0));
+    public Snake(String name) {
+        this(name, 100, 100, new PVector(1, 0));
     }
 
-    public Snake(float x, float y, PVector direction) {
+    public Snake(String name, float x, float y, PVector direction) {
         for (int i = 0; i < SIZE; i++) {
             parts.add(new PVector(x,y));
         }
         this.direction = direction;
+        this.name = name;
     }
 
     public void moveTo(PVector newHead) {
@@ -56,6 +59,14 @@ public class Snake {
 
     public PVector head() {
         return parts.get(0);
+    }
+
+    public PVector tail() {
+        return parts.get(parts.size() - 1);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public PVector getDirection() {
