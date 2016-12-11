@@ -21,10 +21,6 @@ import shared.GameSocket;
 import shared.Connection;
 import shared.MessageHandler;
 
-enum Rotation {
-    NONE, LEFT, RIGHT
-}
-
 public class SnakeTest extends PApplet {
 
     public static final int SCREEN_X = 1024;
@@ -35,8 +31,6 @@ public class SnakeTest extends PApplet {
 
     Connection connection;
 
-    static PVector direction = new PVector(1,0);
-    static Rotation rotation = Rotation.NONE;
     static final Map<String, Snake> snakes = new HashMap<>();
     static final Random random = new Random();
 
@@ -94,20 +88,15 @@ public class SnakeTest extends PApplet {
     public void draw() {    	
         background(255);
 
-        if (rotation == Rotation.LEFT) {
-            direction.rotate(-0.1f);
-        } else if (rotation == Rotation.RIGHT) {
-            direction.rotate(0.1f);
-        }
+        getSnake().moveBy(1 / frameRate);
 
-        if (rotation != Rotation.NONE) {
+        if (getSnake().isTurning()) {
             connection.send("dir "
                     + playerName + " "
-                    + direction.x + " "
-                    + direction.y);
+                    + getSnake().getDirection().x + " "
+                    + getSnake().getDirection().y);
         }
 
-        getSnake().moveBy(PVector.div(direction, frameRate));
         drawSnake(getSnake());
 
         synchronized (foods) {
@@ -124,21 +113,19 @@ public class SnakeTest extends PApplet {
 
     @Override
     public void keyPressed(KeyEvent event) {
-        //System.out.println(event.getKeyCode());
-
         switch (event.getKeyCode()) {
             case 37:
-                rotation = Rotation.LEFT;
+                getSnake().goLeft();
                 break;
             case 39:
-                rotation = Rotation.RIGHT;
+                getSnake().goRight();
                 break;
         }
     }
 
     @Override
     public void keyReleased() {
-        rotation = Rotation.NONE;
+        getSnake().goStraight();
     }
 
     public class ClientGameSocket extends GameSocket {
@@ -177,7 +164,10 @@ public class SnakeTest extends PApplet {
             if (snake == null) {
                 putSnake(
                         name, 
-                        new Snake(scanner.nextFloat(), scanner.nextFloat()));
+                        new Snake(
+                            scanner.nextFloat(),
+                            scanner.nextFloat(),
+                            new PVector(1, 0)));
             } else {
                 snake.moveTo(
                         new PVector(scanner.nextFloat(), scanner.nextFloat()));

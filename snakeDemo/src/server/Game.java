@@ -17,16 +17,14 @@ public class Game extends Thread{
     class Player {
         final Connection connection;
         final Snake snake;
-        final PVector direction;
 
-        public Player(Connection connection, Snake snake, PVector direction) {
+        public Player(Connection connection, Snake snake) {
             this.connection = connection;
             this.snake = snake;
-            this.direction = direction;
         }
 
         public void move() {
-            snake.moveBy(direction);
+            snake.moveBy(1f);
         }
 
         public void eat() {
@@ -76,7 +74,7 @@ public class Game extends Thread{
         System.out.println("Client registered: "+ connection.getPlayerName());
         players.put(
                 connection.getPlayerName(),
-                new Player(connection, new Snake(), new PVector(1,0))
+                new Player(connection, new Snake())
         );
         for (Food food : foods) { connection.send(food.getMessage()); }
         for (Player player : players.values()) {
@@ -124,6 +122,6 @@ public class Game extends Thread{
     }
 
     public synchronized void setDirection(String playerName, float x, float y) {
-        players.get(playerName).direction.set(x,y).normalize();
+        players.get(playerName).snake.setDirection(new PVector(x, y));
     }
 }
