@@ -65,8 +65,10 @@ public class Game extends Thread{
         }
 
         public boolean borderCollision() {
-            // FIXME NYI
-            return false;
+            return snake.head().x < 0
+                || snake.head().y < 0
+                || snake.head().x > FIELD_X
+                || snake.head().y > FIELD_Y;
         }
 
     }
