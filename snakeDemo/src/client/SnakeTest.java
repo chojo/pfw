@@ -27,7 +27,7 @@ public class SnakeTest extends PApplet {
     public static final int SCREEN_X = server.Server.FIELD_X;
     public static final int SCREEN_Y = server.Server.FIELD_Y;
     public static final int MAX_FOOD = 30;
-    public static final PFont f;
+    public static PFont f;
 
     List<Food> foods = Collections.synchronizedList(new LinkedList<>());
 
@@ -62,7 +62,6 @@ public class SnakeTest extends PApplet {
 
     @Override
     public void setup() {
-        size(200,200);
         f = createFont("Arial",16,true);
 
         playerName = "AnonymousSnake" + Integer.toString(random.nextInt(100));
@@ -89,6 +88,7 @@ public class SnakeTest extends PApplet {
     @Override
     public void draw() {
         background(255);
+        rect(0, 0, SCREEN_X-1, SCREEN_Y-1);
         textAlign(CENTER, CENTER);
 
         synchronized (snakes) {
@@ -103,7 +103,6 @@ public class SnakeTest extends PApplet {
                     + getSnake().getDirection().x + " "
                     + getSnake().getDirection().y);
         }
-
 
         synchronized (foods) {
             for (Food food : foods) {
@@ -121,6 +120,7 @@ public class SnakeTest extends PApplet {
 
     private void gameOver() {
         // TODO Game over logic.
+        drawGameOver();
         exit();
     }
 

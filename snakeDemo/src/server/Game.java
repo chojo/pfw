@@ -34,8 +34,8 @@ public class Game extends Thread{
             if ( !borderCollision( snake.head() ) ) {
                 snake.moveBy(TICK_DURATION);
             } else {
-                SnakeTest.drawGameOver();
-                unregisterClient( playerConnection );
+                // SnakeTest.drawGameOver();
+                // unregisterClient( playerConnection );
             }
         }
 
