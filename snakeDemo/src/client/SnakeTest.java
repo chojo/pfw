@@ -13,6 +13,7 @@ import java.util.Collections;
 
 import processing.core.PApplet;
 import processing.core.PVector;
+import processing.core.PFont;
 import processing.event.KeyEvent;
 
 import shared.Snake;
@@ -21,22 +22,17 @@ import shared.GameSocket;
 import shared.Connection;
 import shared.MessageHandler;
 
-enum Rotation {
-    NONE, LEFT, RIGHT
-}
-
 public class SnakeTest extends PApplet {
 
     public static final int SCREEN_X = server.Server.FIELD_X;
     public static final int SCREEN_Y = server.Server.FIELD_Y;
     public static final int MAX_FOOD = 30;
+    public static final PFont f;
 
     List<Food> foods = Collections.synchronizedList(new LinkedList<>());
 
     Connection connection;
 
-    static PVector direction = new PVector(1,0);
-    static Rotation rotation = Rotation.NONE;
     static final Map<String, Snake> snakes = new HashMap<>();
     static final Random random = new Random();
 
@@ -58,12 +54,19 @@ public class SnakeTest extends PApplet {
             PVector v = snake.getParts().get(i);
             ellipse(v.x, v.y, 20,20);
         }
+        fill(0);
+        PVector textPosition = PVector.div(PVector.add(snake.head(), snake.tail()), 2);
+        text(snake.getName(), textPosition.x, textPosition.y);
+        fill(255);
     }
 
     @Override
     public void setup() {
+        size(200,200);
+        f = createFont("Arial",16,true);
+
         playerName = "AnonymousSnake" + Integer.toString(random.nextInt(100));
-        snakes.put(playerName, new Snake());
+        snakes.put(playerName, new Snake(playerName));
         try {
             connection = new ServerConnection(
                     new ClientGameSocket(this, "127.0.0.1", 3000), this);
@@ -75,6 +78,7 @@ public class SnakeTest extends PApplet {
             e.printStackTrace();
         }
         connection.putMessageHandler("pos", new PosMessageHandler());
+        connection.putMessageHandler("dir", new DirMessageHandler());
         connection.putMessageHandler("score", new ScoreMessageHandler());
         connection.putMessageHandler("die", new DieMessageHandler());
         connection.putMessageHandler("eat", new EatMessageHandler());
@@ -85,28 +89,34 @@ public class SnakeTest extends PApplet {
     @Override
     public void draw() {
         background(255);
+        textAlign(CENTER, CENTER);
 
-        if (rotation == Rotation.LEFT) {
-            direction.rotate(-0.1f);
-        } else if (rotation == Rotation.RIGHT) {
-            direction.rotate(0.1f);
+        synchronized (snakes) {
+            for (Snake snake : snakes.values()) {
+                snake.moveBy(1 / frameRate);
+                drawSnake(snake);
+            }
         }
 
-        if (rotation != Rotation.NONE) {
+        if (getSnake().isTurning()) {
             connection.send("dir "
-                    + playerName + " "
-                    + direction.x + " "
-                    + direction.y);
+                    + getSnake().getDirection().x + " "
+                    + getSnake().getDirection().y);
         }
 
-        getSnake().moveBy(PVector.div(direction, frameRate));
-        drawSnake(getSnake());
 
         synchronized (foods) {
             for (Food food : foods) {
                 ellipse(food.x, food.y, Food.SIZE, Food.SIZE);
             }
         }
+    }
+
+    public void drawGameOver() {
+        background(255);
+        textFont(f,16);
+        fill(0);
+        text("Game Over!",10,100);
     }
 
     private void gameOver() {
@@ -116,21 +126,19 @@ public class SnakeTest extends PApplet {
 
     @Override
     public void keyPressed(KeyEvent event) {
-        //System.out.println(event.getKeyCode());
-
         switch (event.getKeyCode()) {
             case 37:
-                rotation = Rotation.LEFT;
+                getSnake().goLeft();
                 break;
             case 39:
-                rotation = Rotation.RIGHT;
+                getSnake().goRight();
                 break;
         }
     }
 
     @Override
     public void keyReleased() {
-        rotation = Rotation.NONE;
+        getSnake().goStraight();
     }
 
     public class ClientGameSocket extends GameSocket {
@@ -163,13 +171,17 @@ public class SnakeTest extends PApplet {
 
     public class PosMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             String name = scanner.next();
             final Snake snake = getSnake(name);
             if (snake == null) {
                 putSnake(
                         name,
-                        new Snake(scanner.nextFloat(), scanner.nextFloat()));
+                        new Snake(
+                            name,
+                            scanner.nextFloat(),
+                            scanner.nextFloat(),
+                            new PVector(1, 0)));
             } else {
                 snake.moveTo(
                         new PVector(scanner.nextFloat(), scanner.nextFloat()));
@@ -177,16 +189,27 @@ public class SnakeTest extends PApplet {
         }
     }
 
+    public class DirMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner, Connection connection) {
+            String name = scanner.next();
+            if (playerName.equals(name)) { return; }
+            getSnake(name)
+                .setDirection(
+                        new PVector(scanner.nextFloat(), scanner.nextFloat()));
+        }
+    }
+
     public class ScoreMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             getSnake(scanner.next()).grow(scanner.nextInt() - Snake.SIZE);
         }
     }
 
     public class DieMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             snakes.remove(scanner.next());
             if (getSnake() == null) { gameOver(); }
         }
@@ -194,7 +217,7 @@ public class SnakeTest extends PApplet {
 
     public class EatMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             getSnake(scanner.next()).grow(Food.GROWTH_FACTOR);
             foods.remove(scanner.nextInt());
         }
@@ -202,7 +225,7 @@ public class SnakeTest extends PApplet {
 
     public class FeedMessageHandler implements MessageHandler {
         @Override
-        public void handle(Scanner scanner) {
+        public void handle(Scanner scanner, Connection connection) {
             foods.add(new Food(scanner.nextFloat(), scanner.nextFloat()));
         }
     }

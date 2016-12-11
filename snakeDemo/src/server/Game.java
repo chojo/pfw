@@ -1,23 +1,21 @@
 package server;
 
-<<<<<<< HEAD
-import processing.core.PFont;
-import processing.core.PVector;
-import shared.Snake;
-
-=======
->>>>>>> master
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Scanner;
 
+import client.SnakeTest;
 import processing.core.PVector;
 
 import shared.Connection;
+import shared.MessageHandler;
 import shared.Snake;
 import shared.Food;
+
+import static client.SnakeTest.*;
 
 public class Game extends Thread{
 
@@ -25,19 +23,18 @@ public class Game extends Thread{
 
         final Connection connection;
         final Snake snake;
-        final PVector direction;
 
-        public Player(Connection connection, Snake snake, PVector direction) {
+        public Player(Connection connection, Snake snake) {
             this.connection = connection;
             this.snake = snake;
-            this.direction = direction;
         }
 
         public void move() {
+
             if ( !borderCollision( snake.head() ) ) {
-                snake.moveBy(direction);
+                snake.moveBy(TICK_DURATION);
             } else {
-                drawGameOver();
+                SnakeTest.drawGameOver();
                 unregisterClient( playerConnection );
             }
         }
@@ -45,7 +42,8 @@ public class Game extends Thread{
         public void eat() {
             for (int i = 0; i < foods.size(); i++) {
                 Food food = foods.get(i);
-                if (snake.head().dist(food) < Food.SIZE + Snake.SPEED) {
+                if (snake.head().dist(food)
+                        < Food.SIZE + Snake.SPEED * TICK_DURATION) {
                     snake.grow(Food.GROWTH_FACTOR);
                     foods.remove(i);
                     broadcast("eat "
@@ -57,6 +55,13 @@ public class Game extends Thread{
 
         public String position() {
             return "pos "+ connection.getPlayerName()+" "+snake.head().x+" "+snake.head().y;
+        }
+
+        public String direction() {
+            return "dir "
+                + connection.getPlayerName() + " "
+                + snake.getDirection().x + " "
+                + snake.getDirection().y;
         }
 
         public String score() {
@@ -72,24 +77,12 @@ public class Game extends Thread{
         public boolean borderCollision( PVector v ) {
             return (v.x  + 10) > Server.FIELD_X || (v.x  + 10) < 0 || (v.y  + 10) > Server.FIELD_Y || (v.y  + 10) < 0;
         }
-
-        void setup() {
-            PFont f;
-            size(200,200);
-            f = createFont("Arial",16,true);
-        }
-
-        void drawGameOver() {
-            background(255);
-            textFont(f,16);
-            fill(0);
-            text("Game Over!",10,100);
-        }
     }
 
     public static final int FIELD_X = 1024;
     public static final int FIELD_Y = 768;
     public static final int MAX_FOOD = 30;
+    public static final float TICK_DURATION = 0.1f;
 
     static final Random random = new Random();
 
@@ -100,11 +93,14 @@ public class Game extends Thread{
         System.out.println("Client registered: "+ connection.getPlayerName());
         players.put(
                 connection.getPlayerName(),
-                new Player(connection, new Snake(), new PVector(1,0))
+                new Player(connection, new Snake(connection.getPlayerName()))
         );
+        connection.putMessageHandler("dir", new DirMessageHandler());
         for (Food food : foods) { connection.send(food.getMessage()); }
         for (Player player : players.values()) {
-            connection.send(player.position() + "\n" + player.score());
+            connection.send(player.position() + "\n"
+                    + player.direction() + "\n"
+                    + player.score());
         }
     }
 
@@ -119,7 +115,7 @@ public class Game extends Thread{
     public void run() {
         while (true) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep((long) (TICK_DURATION * 1000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -148,6 +144,17 @@ public class Game extends Thread{
     }
 
     public synchronized void setDirection(String playerName, float x, float y) {
-        players.get(playerName).direction.set(x,y).normalize();
+        players.get(playerName).snake.setDirection(new PVector(x, y));
+    }
+
+    public class DirMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner, Connection connection) {
+            setDirection(
+                    connection.getPlayerName(),
+                    scanner.nextFloat(),
+                    scanner.nextFloat());
+            broadcast(players.get(connection.getPlayerName()).direction());
+        }
     }
 }

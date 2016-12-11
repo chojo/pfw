@@ -59,7 +59,7 @@ public abstract class Connection extends Thread {
         String type = scanner.next();
         MessageHandler handler = handlers.get(type);
         if (handler != null) {
-            handler.handle(scanner);
+            handler.handle(scanner, this);
         } else {
             System.out.println("Received an unhandled message of type " + type);
         }
