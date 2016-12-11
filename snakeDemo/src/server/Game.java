@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Scanner;
 
 import processing.core.PVector;
 
 import shared.Connection;
+import shared.MessageHandler;
 import shared.Snake;
 import shared.Food;
 
@@ -78,6 +80,7 @@ public class Game extends Thread{
                 connection.getPlayerName(),
                 new Player(connection, new Snake(connection.getPlayerName()))
         );
+        connection.putMessageHandler("dir", new DirMessageHandler());
         for (Food food : foods) { connection.send(food.getMessage()); }
         for (Player player : players.values()) {
             connection.send(player.position() + "\n" + player.score());
@@ -117,7 +120,7 @@ public class Game extends Thread{
         }
     }
 
-    public void broadcast(String message) {
+    private void broadcast(String message) {
         for (Player p : players.values()) {
             p.connection.send(message);
         }
@@ -125,5 +128,18 @@ public class Game extends Thread{
 
     public synchronized void setDirection(String playerName, float x, float y) {
         players.get(playerName).snake.setDirection(new PVector(x, y));
+    }
+
+    public class DirMessageHandler implements MessageHandler {
+        @Override
+        public void handle(Scanner scanner, Connection connection) {
+            Float x = scanner.nextFloat();
+            Float y = scanner.nextFloat();
+            setDirection(connection.getPlayerName(), x, y);
+            broadcast("dir "
+                    + connection.getPlayerName() + " "
+                    + Float.toString(x) + " "
+                    + Float.toString(y));
+        }
     }
 }
