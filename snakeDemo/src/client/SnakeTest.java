@@ -92,6 +92,7 @@ public class SnakeTest extends PApplet {
         synchronized (snakes) {
             for (Snake snake : snakes.values()) {
                 snake.moveBy(1 / frameRate);
+                drawSnake(snake);
             }
         }
 
@@ -101,7 +102,6 @@ public class SnakeTest extends PApplet {
                     + getSnake().getDirection().y);
         }
 
-        drawSnake(getSnake());
 
         synchronized (foods) {
             for (Food food : foods) {
