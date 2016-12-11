@@ -89,7 +89,11 @@ public class SnakeTest extends PApplet {
     public void draw() {    	
         background(255);
 
-        getSnake().moveBy(1 / frameRate);
+        synchronized (snakes) {
+            for (Snake snake : snakes.values()) {
+                snake.moveBy(1 / frameRate);
+            }
+        }
 
         if (getSnake().isTurning()) {
             connection.send("dir "
