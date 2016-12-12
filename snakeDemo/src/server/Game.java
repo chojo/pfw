@@ -73,15 +73,23 @@ public class Game extends Thread{
         }
 
     }
-
+    
+    /** Width of the game-window. */
     public static final int FIELD_X = 1024;
+    
+    /** Height of the game-window. */
     public static final int FIELD_Y = 768;
+    
+    /** Maximum number of Food on the screen. */
     public static final int MAX_FOOD = 30;
+    
     public static final float TICK_DURATION = 0.1f;
 
     static final Random random = new Random();
 
     private final Map<String, Player> players = new HashMap<>();
+    
+    /** List of the currently drawn food. */
     final List<Food> foods = new LinkedList<>();
 
     public synchronized void registerClient(Connection connection) {
@@ -123,7 +131,7 @@ public class Game extends Thread{
             for (Player player : players.values()) {
                 broadcast(player.position());
             }
-
+            // if the list of food is not full create new food an add it to the list
             if (foods.size() <= random.nextInt(MAX_FOOD)) {
                 Food food = Food.randomFood(FIELD_X, FIELD_Y);
                 foods.add(food);
