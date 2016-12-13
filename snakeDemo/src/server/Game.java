@@ -27,6 +27,7 @@ public class Game extends Thread{
 
         public void move() {
             snake.moveBy(TICK_DURATION);
+            // close connection if snake reaches the canvas border
             if (borderCollision()) { unregisterClient(connection); }
         }
 
@@ -65,6 +66,10 @@ public class Game extends Thread{
             return "die " + connection.getPlayerName();
         }
 
+        /**
+         * To determine whether snake touches the border of screen
+         * @return      true when snake reaches the canvas border
+         */
         public boolean borderCollision() {
             return snake.head().x < 0
                 || snake.head().y < 0
@@ -73,22 +78,22 @@ public class Game extends Thread{
         }
 
     }
-    
+
     /** Width of the game-window. */
     public static final int FIELD_X = 1024;
-    
+
     /** Height of the game-window. */
     public static final int FIELD_Y = 768;
-    
+
     /** Maximum number of Food on the screen. */
     public static final int MAX_FOOD = 30;
-    
+
     public static final float TICK_DURATION = 0.1f;
 
     static final Random random = new Random();
 
     private final Map<String, Player> players = new HashMap<>();
-    
+
     /** List of the currently drawn food. */
     final List<Food> foods = new LinkedList<>();
 
