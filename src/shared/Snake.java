@@ -97,6 +97,11 @@ public class Snake {
         return parts;
     }
 
+    
+    /**
+     * This function helps the Snake to grow.
+     * @param grow     the number of elements that are added to the snake
+     */
     public void grow(int grow) {
         PVector lastElement = parts.get(SIZE - 1);
 

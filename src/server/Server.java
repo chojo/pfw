@@ -8,13 +8,13 @@ import shared.GameSocket;
 import shared.Connection;
 
 public class Server {
-    public static final int FIELD_X = 424;
+    public static final int FIELD_X = 1024;
     public static final int FIELD_Y = 768;
 
     private static Game game = new Game();
 
     public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(4000);
+        ServerSocket server = new ServerSocket(3000);
         game.start();
 
         while (true) {
