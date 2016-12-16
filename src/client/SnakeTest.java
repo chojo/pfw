@@ -63,7 +63,7 @@ public class SnakeTest extends PApplet {
 
     @Override
     public void setup() {
-        f = createFont("Arial",16,true);
+        f = createFont("Arial", 72, true);
 
         playerName = "AnonymousSnake" + Integer.toString(random.nextInt(100));
         snakes.put(playerName, new Snake(playerName));
@@ -122,9 +122,9 @@ public class SnakeTest extends PApplet {
     }
 
     public void drawGameOver() {
-        textFont(f,16);
+        textFont(f);
         fill(0);
-        text("Game Over!",10,100);
+        text("Game Over!", width / 2, height / 2);
     }
 
     private void gameOver() {
