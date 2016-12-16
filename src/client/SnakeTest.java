@@ -37,6 +37,7 @@ public class SnakeTest extends PApplet {
     static final Random random = new Random();
 
     String playerName;
+    Boolean gameOver = false;
 
     public static void main(String[] args)  {
         PApplet.main("client.SnakeTest");
@@ -88,40 +89,48 @@ public class SnakeTest extends PApplet {
     @Override
     public void draw() {
         background(255);
-        rect(0, 0, SCREEN_X-1, SCREEN_Y-1);
-        textAlign(CENTER, CENTER);
 
-        synchronized (snakes) {
-            for (Snake snake : snakes.values()) {
-                snake.moveBy(1 / frameRate);
-                drawSnake(snake);
+        synchronized (gameOver) {
+
+            if (gameOver) {
+                drawGameOver();
+                return;
             }
-        }
+            rect(0, 0, SCREEN_X-1, SCREEN_Y-1);
+            textAlign(CENTER, CENTER);
 
-        if (getSnake().isTurning()) {
-            connection.send("dir "
-                    + getSnake().getDirection().x + " "
-                    + getSnake().getDirection().y);
-        }
-
-        synchronized (foods) {
-            for (Food food : foods) {
-                ellipse(food.x, food.y, Food.SIZE, Food.SIZE);
+            synchronized (snakes) {
+                for (Snake snake : snakes.values()) {
+                    snake.moveBy(1 / frameRate);
+                    drawSnake(snake);
+                }
             }
+
+            if (getSnake().isTurning()) {
+                connection.send("dir "
+                        + getSnake().getDirection().x + " "
+                        + getSnake().getDirection().y);
+            }
+
+            synchronized (foods) {
+                for (Food food : foods) {
+                    ellipse(food.x, food.y, Food.SIZE, Food.SIZE);
+                }
+            }
+
         }
     }
 
     public void drawGameOver() {
-        background(255);
         textFont(f,16);
         fill(0);
         text("Game Over!",10,100);
     }
 
     private void gameOver() {
-        // TODO Game over logic.
-        drawGameOver();
-        exit();
+        synchronized (gameOver) {
+            gameOver = true;
+        }
     }
 
     @Override
